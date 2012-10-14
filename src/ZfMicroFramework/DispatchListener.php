@@ -35,10 +35,7 @@ use Zend\Mvc\DispatchListener as ZfDispatchListener;
 class DispatchListener extends ZfDispatchListener
 {
     /**
-     * Listen to the "dispatch" event
-     *
-     * @param  MvcEvent $e
-     * @return mixed
+     * {@inheritDoc}
      */
     public function onDispatch(MvcEvent $e)
     {
@@ -96,11 +93,7 @@ class DispatchListener extends ZfDispatchListener
     }
 
     /**
-     * Complete the dispatch
-     *
-     * @param  mixed $return
-     * @param  MvcEvent $event
-     * @return mixed
+     * {@inheritDoc}
      */
     protected function complete($return, MvcEvent $event)
     {

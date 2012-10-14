@@ -33,19 +33,12 @@ class Module implements ServiceProviderInterface
         return array(
             'invokables' => array(
                 'DispatchListener'  => 'ZfMicroFramework\DispatchListener',
-                //'RouteListener'     => null,
             ),
             'factories' => array(
                 'Application' => function (ServiceLocatorInterface $sl) {
                     return new Application($sl->get('Config'), $sl);
                 },
-                /*'DispatchListener' => function (ServiceLocatorInterface $sl) {
-                    return function () {
-                        echo 'dispatch';
-                    };
-                },*/
-                'Router' => function (ServiceLocatorInterface $sl) {
-                    //return SimpleIteratorRoute::factory();
+                'Router' => function () {
                     return HttpRouter::factory(array());
                 },
                 'HttpRouter' => function (ServiceLocatorInterface $sl) {
