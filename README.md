@@ -15,9 +15,13 @@ how similar/different the architectures of Silex and ZF2 are.
 
 ## Installation:
 
+In a project with a `composer.json` file, type following in your console.
+
 ```sh
 $ composer require ocramius/zf-micro-framework
 ```
+
+You can type `*` as a required version.
 
 ## Usage:
 
