@@ -104,14 +104,6 @@ class DispatchListener extends ZfDispatchListener
             return $response;
         }
 
-        if (!is_object($return)) {
-            if (ArrayUtils::hasStringKeys($return)) {
-                $return = new ArrayObject($return, ArrayObject::ARRAY_AS_PROPS);
-            }
-        }
-
-        $event->setResult($return);
-
-        return $return;
+        return parent::complete($return, $event);
     }
 }
