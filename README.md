@@ -1,9 +1,12 @@
 # ZeffMu - a micro framework built on ZF2
 
 Zeff - The effective nuclear charge (often symbolize as Zeff or Z*) is the net positive charge experienced by an electron in a multi-electron atom.
+
 Mu - Micron or small
 
 Zeff is also a contraction of the British English pronounced Zed Eff (ZF)
+
+--------------------------------------------------------------------------------------------------
 
 This project is a simple example of how ZF2 could be used to build a 
 really simple micro-framework. It looks exactly like 
