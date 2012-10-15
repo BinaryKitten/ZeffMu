@@ -3,8 +3,6 @@ chdir(dirname(__DIR__));
 include 'init_autoloader.php';
 
 $app = \ZeffMu\App::init();
-$b = $app->bob;
-$b();
 $app
     ->route('/', function() {
         return '<a href="/hello">HEllo!</a>';
