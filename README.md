@@ -1,5 +1,3 @@
-ZeffMu
-
 # ZeffMu - a micro framework built on ZF2
 
 This project is a simple example of how ZF2 could be used to build a 
@@ -34,7 +32,7 @@ following:
 <?php
 require_once __DIR__ . '/../vendor/autoload.php';
 
-$app = \ZfMicroFramework\Application::init();
+$app = \ZeffMu\Application::init();
 
 $app->route('/hello', function() {
     return 'Hi!';
@@ -60,7 +58,7 @@ $app->run();
 
 ## Limitations (for now)
 
- * ZfMicroFramework will currently route all HTTP requests, regardless of the HTTP method.
+ * ZeffMu will currently route all HTTP requests, regardless of the HTTP method.
  * It does not support things such as filtering output strings natively
  * It does not support setting controllers or retrieving them from the internal service
    locator (since that would require naming the controllers and basically ending up with

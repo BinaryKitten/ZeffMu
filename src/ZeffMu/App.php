@@ -14,10 +14,10 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <https://github.com/Ocramius/ZfMicroFramework>.
+ * <https://github.com/BinaryKitten/ZeffMu>.
  */
 
-namespace ZfMicroFramework;
+namespace ZeffMu;
 
 use Zend\Mvc\Application as ZfApplication;
 use Zend\Mvc\Router\Http\Part as PartRoute;
@@ -28,8 +28,9 @@ use Zend\Mvc\Router\RouteInterface;
  *
  * @license MIT
  * @author  Marco Pivetta <ocramius@gmail.com>
+ * @author  Kathryn Reeve <kathryn@binarykitten.com>
  */
-class Application extends ZfApplication
+class App extends ZfApplication
 {
     /**
      * @param string|RouteInterface $route
@@ -52,6 +53,7 @@ class Application extends ZfApplication
                     ),
                 )
             );
+        return $this;
     }
 
     /**
@@ -72,8 +74,13 @@ class Application extends ZfApplication
             $configuration['modules'] = array();
         }
 
-        $configuration['modules'][] = 'ZfMicroFramework';
+        $configuration['modules'][] = 'ZeffMu';
 
         return parent::init($configuration);
+    }
+
+    public function __invoke()
+    {
+        $this->run();
     }
 }

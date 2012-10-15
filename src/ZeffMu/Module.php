@@ -14,10 +14,10 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
- * <https://github.com/Ocramius/ZfMicroFramework>.
+ * <https://github.com/BinaryKitten/ZeffMu>.
  */
 
-namespace ZfMicroFramework;
+namespace ZeffMu;
 
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
@@ -32,11 +32,11 @@ class Module implements ServiceProviderInterface
     {
         return array(
             'invokables' => array(
-                'DispatchListener'  => 'ZfMicroFramework\DispatchListener',
+                'DispatchListener'  => 'ZeffMu\DispatchListener',
             ),
             'factories' => array(
                 'Application' => function (ServiceLocatorInterface $sl) {
-                    return new Application($sl->get('Config'), $sl);
+                    return new App($sl->get('Config'), $sl);
                 },
                 'Router' => function () {
                     return HttpRouter::factory(array());

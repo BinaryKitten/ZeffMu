@@ -1,5 +1,5 @@
 {
-    "name": "ocramius/zf-micro-framework",
+    "name": "binarykitten/ZeffMu",
     "description": "Zend Framework 2 based Micro Framework",
     "type": "library",
     "license": "MIT",
@@ -8,12 +8,18 @@
         "micro",
         "zf2"
     ],
-    "homepage": "https://github.com/Ocramius/ZfMicroFramework",
+    "homepage": "https://github.com/binarykitten/ZeffMu",
     "authors": [
         {
             "name": "Marco Pivetta",
             "email": "ocramius@gmail.com",
             "homepage": "http://marco-pivetta.com/",
+            "role": "Developer"
+        },
+         {
+            "name": "Kathryn Reeve",
+            "email": "kathryn@binarykitten.com",
+            "homepage": "http://binarykitten.com/",
             "role": "Developer"
         }
     ],
@@ -23,7 +29,7 @@
     },
     "autoload": {
         "psr-0": {
-            "ZfMicroFramework": "src/"
+            "ZeffMu": "src/"
         }
     }
 }
