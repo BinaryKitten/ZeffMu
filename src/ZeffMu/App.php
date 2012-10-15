@@ -79,6 +79,11 @@ class App extends ZfApplication
         return parent::init($configuration);
     }
 
+    public function getService($service)
+    {
+        return $this->getServiceManager()->get($service);
+    }
+
     public function __invoke()
     {
         $this->run();

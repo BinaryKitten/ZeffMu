@@ -62,7 +62,7 @@ $app
  * Since the application is a fully functional ZF application, you could also return view
    models in your closures, thus having templates rendered.
  * You can attach listeners to events like in a standard ZF2 application
- * You can fetch services like in a standard MVC application (i.e. `$app->getServiceLocator()->get('db')`)
+ * You can fetch services like in a standard MVC application (i.e. `$app->getService('db')` or `$app->getServiceLocator()->get('db')`)
  * You can load modules and have any module functionality as in typical ZF2 applications
 
 ## Limitations (for now)
