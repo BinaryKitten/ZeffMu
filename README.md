@@ -8,14 +8,14 @@ Zeff is also a contraction of the British English pronounced Zed Eff (ZF)
 
 --------------------------------------------------------------------------------------------------
 
-This project is a simple example of how ZF2 could be used to build a 
-really simple micro-framework. It looks exactly like 
-[silex](http://silex.sensiolabs.org/), but its core is basically a 
+This project is a simple example of how ZF2 could be used to build a
+really simple micro-framework. It looks exactly like
+[silex](http://silex.sensiolabs.org/), but its core is basically a
 [`ServiceManager`](http://framework.zend.com/manual/2.0/en/modules/zend.service-manager.intro.html).
 
 This allows you to have simple closures returning output as complex
-architectures involving services and more advanced components, such as 
-ZF2's [ModuleManager](http://framework.zend.com/manual/2.0/en/modules/zend.module-manager.intro.html) 
+architectures involving services and more advanced components, such as
+ZF2's [ModuleManager](http://framework.zend.com/manual/2.0/en/modules/zend.module-manager.intro.html)
 or [Doctrine2 ORM](http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/index.html).
 
 Please note that this is a project just developed for fun and to see
@@ -33,7 +33,7 @@ You can type `*` as a required version.
 
 ## Usage:
 
-In your `public/index.php` file (assuming `public` is your webroot), define 
+In your `public/index.php` file (assuming `public` is your webroot), define
 following:
 
 ```php
@@ -41,19 +41,40 @@ following:
 chdir(dirname(__DIR__));
 require 'vendor/autoload.php';
 
-$app = \ZeffMu\App::init();
+use ZeffMu\App;
+
+$app = App::init();
 $app
-    ->route('/', function() {
-        return '<a href="/hello">HEllo!</a>';
+    ->route('/', function() use ($app) {
+        $helper = $app->getViewHelper();
+
+        return '<a href="' . $helper->basepath('hello') . '">Hello</a> World!';
     })
     ->route('/hello', function() {
         return 'Hi!';
     })
-    ->route('/hello/:name', function($params) use ($app) {
+    ->route('/hello/:name', function($params) {
         return 'Hello ' . $params['name'];
     })
-    ->route('/hello/:name/:surname', function($params) use ($app) {
+    ->route('/hello/:name/:surname', function($params) {
         return 'Hello, Mr. ' . $params['surname'] . ', or shall I call you ' . $params['name'] . '?';
+    })
+    ->error(function($event) {
+        $response = $event->getResponse();
+
+        switch ($event->getError()) {
+            case App::ERROR_ROUTER_NO_MATCH:
+            case App::ERROR_CONTROLLER_INVALID:
+            case App::ERROR_CONTROLLER_NOT_FOUND:
+                $response->setStatusCode(404);
+                $message = '<h1>Mystery of the 404 page</h1> Uh this is too big a mystery for me. '
+                         . 'I think we\'d better call in the Hardly Boys.';
+                return $message;
+
+            default:
+                $response->setStatusCode(500);
+                return '<h1>It\'s over... 500</h1> That was not supposed to happen.';
+        }
     })
 ->run();
 ```
@@ -77,8 +98,6 @@ $app
  * As a default, it has all the service provided in a default ZF2 application
  * Cannot define a parameter named "controller" in route matches, since it is reserved
  * Assembling routes does not yet work
- * Helper methods (view helpers/controller plugins) utilities are not yet accessible in a
-   simple way from the application object. Some simple shortcuts may help.
 
 ## Advanced usage
 
