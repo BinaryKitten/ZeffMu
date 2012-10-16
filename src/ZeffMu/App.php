@@ -115,7 +115,7 @@ class App extends Application
         $serviceManager->setAllowOverride(true);
 
         /**
-         * This can be removed once %s was merged.
+         * This can be removed once https://github.com/zendframework/zf2/pull/2778 was merged.
          */
         $config = $serviceManager->get('Config');
         if (!isset($config['view_manager'])) {
