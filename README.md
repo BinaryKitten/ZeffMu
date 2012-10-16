@@ -26,7 +26,7 @@ how similar/different the architectures of Silex and ZF2 are.
 In a project with a `composer.json` file, type following in your console.
 
 ```sh
-$ composer require BinaryKitten/ZeffMu
+$ composer require binarykitten/zeffmu
 ```
 
 You can type `*` as a required version.
@@ -39,7 +39,7 @@ following:
 ```php
 <?php
 chdir(dirname(__DIR__));
-include 'init_autoloader.php';
+require 'vendor/autoload.php';
 
 $app = \ZeffMu\App::init();
 $app
