@@ -114,15 +114,6 @@ class App extends Application
         $override = $serviceManager->getAllowOverride();
         $serviceManager->setAllowOverride(true);
 
-        /**
-         * This can be removed once https://github.com/zendframework/zf2/pull/2778 was merged.
-         */
-        $config = $serviceManager->get('Config');
-        if (!isset($config['view_manager'])) {
-            $config['view_manager'] = array();
-            $serviceManager->setService('Config', $config);
-        }
-
         $app    = new self($serviceManager->get('Config'), $serviceManager);
         $router = TreeRouteStack::factory(array());
         $serviceManager->setService('Application', $app);
