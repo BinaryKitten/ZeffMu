@@ -20,76 +20,112 @@
 namespace ZeffMu;
 
 use ArrayObject;
-use Zend\ServiceManager\Exception\InvalidServiceNameException;
-use Zend\ServiceManager\Exception\ServiceNotFoundException;
-use Zend\ServiceManager\ServiceManager;
-use Zend\Stdlib\ArrayUtils;
 use Zend\Mvc\MvcEvent;
+use Zend\Mvc\DispatchListener;
 use Zend\Mvc\InjectApplicationEventInterface;
-use Zend\Mvc\DispatchListener as ZfDispatchListener;
+use Zend\EventManager\EventManagerInterface;
+use Zend\Stdlib\ArrayUtils;
+use Zend\ServiceManager\ServiceManager;
+use Zend\ServiceManager\Exception\ServiceNotFoundException;
+use Zend\ServiceManager\Exception\InvalidServiceNameException;
 
 /**
  * Closure dispatch listener - dispatches any requests where a route match includes
  * a closure as 'controller' parameter
  */
-class DispatchListener extends ZfDispatchListener
+class Dispatcher extends DispatchListener
 {
     /**
      * {@inheritDoc}
      */
-    public function onDispatch(MvcEvent $e)
+    public function attach(EventManagerInterface $events)
     {
-        $routeMatch       = $e->getRouteMatch();
-        $controller       = $routeMatch->getParam('controller', null);
-        $application      = $e->getApplication();
-        $events           = $application->getEventManager();
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH, array($this, 'onDispatch'));
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH_ERROR, array($this, 'onDispatchError'), 100);
+    }
+
+    /**
+     * Listen to the "dispatch" event
+     *
+     * @param  MvcEvent $event
+     * @return mixed
+     */
+    public function onDispatch(MvcEvent $event)
+    {
+        $routeMatch  = $event->getRouteMatch();
+        $controller  = $routeMatch->getParam('controller', null);
+        $application = $event->getApplication();
+        $events      = $application->getEventManager();
 
         if (null === $controller) {
             $return = $this->marshallControllerNotFoundEvent(
-                Application::ERROR_CONTROLLER_NOT_FOUND,
+                App::ERROR_CONTROLLER_NOT_FOUND,
                 $controller,
                 new ServiceNotFoundException(),
-                $e,
+                $event,
                 $application
             );
-            return $this->complete($return, $e);
+            return $this->complete($return, $event);
         }
 
         if (!is_callable($controller)) {
             $return = $this->marshallControllerNotFoundEvent(
-                Application::ERROR_CONTROLLER_INVALID,
+                App::ERROR_CONTROLLER_INVALID,
                 gettype($controller),
                 new InvalidServiceNameException(),
-                $e,
+                $event,
                 $application
             );
-            return $this->complete($return, $e);
+            return $this->complete($return, $event);
         }
 
-        $request  = $e->getRequest();
+        $request  = $event->getRequest();
         $response = $application->getResponse();
 
         if ($controller instanceof InjectApplicationEventInterface) {
-            $controller->setEvent($e);
+            $controller->setEvent($event);
         }
 
         try {
             $return = $controller($routeMatch->getParams(), $request, $response);
-        } catch (\Exception $ex) {
-            $e
-                ->setError(Application::ERROR_EXCEPTION)
-                ->setController($controller)
-                ->setControllerClass(get_class($controller))
-                ->setParam('exception', $ex);
-            $results = $events->trigger(MvcEvent::EVENT_DISPATCH_ERROR, $e);
-            $return = $results->last();
+        } catch (\Exception $exception) {
+            $event->setError(App::ERROR_EXCEPTION)
+              ->setController($controller)
+              ->setControllerClass(get_class($controller))
+              ->setParam('exception', $exception);
 
-            if (! $return) {
-                $return = $e->getResult();
+            $results = $events->trigger(MvcEvent::EVENT_DISPATCH_ERROR, $event);
+            $return  = $results->last();
+
+            if (!$return) {
+                $return = $event->getResult();
             }
         }
 
-        return $this->complete($return, $e);
+        return $this->complete($return, $event);
+    }
+
+    /**
+     * Listen to the "dispatch.error" event
+     *
+     * @param  MvcEvent $event
+     * @return mixed
+     */
+    public function onDispatchError(MvcEvent $event)
+    {
+        $controller = $event->getParam('error-controller', null);
+
+        if ($controller === null) {
+            return;
+        }
+
+        if (!is_callable($controller)) {
+            return;
+        }
+
+        $event->stopPropagation();
+
+        return $this->complete($controller($event), $event);
     }
 
     /**
