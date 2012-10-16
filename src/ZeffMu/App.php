@@ -19,9 +19,11 @@
 
 namespace ZeffMu;
 
-use Zend\Mvc\Application as ZfApplication;
-use Zend\Mvc\Router\Http\Part as PartRoute;
-use Zend\Mvc\Router\RouteInterface;
+use Zend\Mvc\Application;
+use Zend\Mvc\Router\Http\TreeRouteStack;
+use Zend\Mvc\Service\ServiceManagerConfig;
+use Zend\Mvc\Exception\InvalidArgumentException;
+use Zend\ServiceManager\ServiceManager;
 
 /**
  * Zend Framework 2 based micro-framework application
@@ -30,29 +32,65 @@ use Zend\Mvc\Router\RouteInterface;
  * @author  Marco Pivetta <ocramius@gmail.com>
  * @author  Kathryn Reeve <kathryn@binarykitten.com>
  */
-class App extends ZfApplication
+class App extends Application
 {
     /**
-     * @param string|RouteInterface $route
+     * @var TreeRouteStack
+     */
+    protected $router;
+
+    /**
+     * @var \Zend\View\HelperPluginManager
+     */
+    protected $viewHelper;
+
+    /**
+     * @var \Zend\Mvc\Controller\PluginManager
+     */
+    protected $controllerPlugin;
+
+    /**
+     * @param string|\Zend\Mvc\Router\RouteInterface $route
      * @param callable $controller
      */
     public function route($route, $controller)
     {
-        $this
-            ->getServiceManager()
-            ->get('Router')
-            ->addRoute(
-                $route,
-                array(
-                    'type' => 'Zend\Mvc\Router\Http\Segment',
-                    'options' => array(
-                        'route' => $route,
-                        'defaults' => array(
-                            'controller' => $controller,
-                        ),
-                    ),
-                )
-            );
+        if (!isset($this->router)) {
+            $this->router = $this->getServiceManager()->get('Router');
+        }
+
+        $this->router->addRoute(
+                        $route,
+                        array(
+                            'type' => 'Zend\Mvc\Router\Http\Segment',
+                            'options' => array(
+                                'route' => $route,
+                                'defaults' => array(
+                                    'controller' => $controller,
+                                ),
+                            ),
+                        )
+        );
+
+        return $this;
+    }
+
+    /**
+     * Used to display a custom error page.
+     *
+     * @param callable $controller
+     */
+    public function error($controller)
+    {
+        if (!is_callable($controller)) {
+            throw new InvalidArgumentException(sprintf(
+                'The argument $controller must be callable, %s given.',
+                gettype($controller)
+            ));
+        }
+
+        $this->getMvcEvent()->setParam('error-controller', $controller);
+
         return $this;
     }
 
@@ -60,30 +98,84 @@ class App extends ZfApplication
      * {@inheritDoc}
      * @return self
      */
-    public static function init($configuration = null)
+    public static function init($config = null)
     {
-        if (null === $configuration) {
-            $configuration = array(
-                'module_listener_options' => array(),
-                'modules' => array(),
-                'service_manager' => array(),
-            );
+        $arrayKeys = array('modules', 'module_listener_options', 'service_manager');
+        foreach ($arrayKeys as $arrayKey) {
+            if (!isset($config[$arrayKey])) {
+                $config[$arrayKey] = array();
+            }
         }
 
-        if (!isset($configuration['modules'])) {
-            $configuration['modules'] = array();
-        }
+        $serviceManager = new ServiceManager(new ServiceManagerConfig($config['service_manager']));
+        $serviceManager->setService('ApplicationConfig', $config);
+        $serviceManager->get('ModuleManager')->loadModules();
 
-        $configuration['modules'][] = 'ZeffMu';
+        $override = $serviceManager->getAllowOverride();
+        $serviceManager->setAllowOverride(true);
 
-        return parent::init($configuration);
+        $app    = new self($serviceManager->get('Config'), $serviceManager);
+        $router = TreeRouteStack::factory(array());
+        $serviceManager->setService('Application', $app);
+        $serviceManager->setService('Router', $router);
+        $serviceManager->setService('HttpRouter', $router);
+        $serviceManager->setInvokableClass('DispatchListener', 'ZeffMu\Dispatcher');
+
+        $serviceManager->setAllowOverride($override);
+
+        return $app->bootstrap();
     }
 
+    /**
+     * Retrieves a service from the service manager.
+     *
+     * @param  string $service
+     * @return mixed
+     */
     public function getService($service)
     {
         return $this->getServiceManager()->get($service);
     }
 
+    /**
+     * Retrieves the ViewHelperManager from the service manager.
+     *
+     * @return PluginProxy
+     */
+    public function getViewHelper()
+    {
+        if (!isset($this->viewHelper)) {
+            $pluginProxy = new PluginProxy();
+            $viewHelper  = $this->getServiceManager()->get('ViewHelperManager');
+
+            $this->viewHelper = $pluginProxy->setPluginManager($viewHelper);
+        }
+
+        return $this->viewHelper;
+    }
+
+    /**
+     * Retrieves the ControllerPluginManager from the service manager.
+     *
+     * @return \Zend\Mvc\Controller\PluginManager
+     */
+    public function getControllerPlugin()
+    {
+        if (!isset($this->controllerPlugin)) {
+            $pluginProxy      = new PluginProxy();
+            $controllerPlugin = $this->getServiceManager()->get('ControllerPluginManager');
+
+            $this->controllerPlugin = $pluginProxy->setPluginManager($controllerPlugin);
+        }
+
+        return $this->controllerPlugin;
+    }
+
+    /**
+     * Run the application
+     *
+     * @return string
+     */
     public function __invoke()
     {
         $this->run();
