@@ -23,9 +23,15 @@
             "role": "Developer"
         }
     ],
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://packages.zendframework.com/"
+        }
+    ],
     "require": {
         "php": ">=5.3",
-        "zendframework/zendframework": "2.*"
+        "zendframework/zend-mvc": "2.*"
     },
     "autoload": {
         "psr-0": {
