@@ -38,6 +38,10 @@ class App extends ZfApplication
      */
     public function route($route, $controller)
     {
+        if ($controller instanceof \Closure) {
+            $controller = new ClosureController($controller);
+        }
+
         $this
             ->getServiceManager()
             ->get('Router')

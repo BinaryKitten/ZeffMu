@@ -19,29 +19,34 @@
 
 namespace ZeffMu;
 
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\ModuleManager\Feature\ServiceProviderInterface;
-use Zend\Mvc\Router\Http\TreeRouteStack as HttpRouter;
+use Zend\Mvc\Controller\AbstractController;
+use Zend\Mvc\MvcEvent;
+use Closure;
 
-class Module implements ServiceProviderInterface
+/**
+ * Description of ClosureController
+ *
+ * @author Kat
+ */
+class ClosureController extends AbstractController
 {
     /**
-     * {@inheritDoc}
+     * The closure we are wrapping
+     * @var Closure $closure
      */
-    public function getServiceConfig()
+    protected $closure = null;
+
+    public function __construct(Closure $closure)
     {
-        return array(
-            'factories' => array(
-                'Application' => function (ServiceLocatorInterface $sl) {
-                    return new App($sl->get('Config'), $sl);
-                },
-                'Router' => function () {
-                    return HttpRouter::factory(array());
-                },
-                'HttpRouter' => function (ServiceLocatorInterface $sl) {
-                    return $sl->get('Router');
-                }
-            ),
-        );
+        $this->closure = $closure;
+    }
+
+    public function onDispatch(MvcEvent $e)
+    {
+        $closure = $this->closure;
+        if (version_compare(PHP_VERSION, '5.4.0') >= 0) {
+            Closure::bind($closure, $this);
+        }
+        $closure();
     }
 }
