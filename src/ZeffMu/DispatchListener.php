@@ -25,6 +25,7 @@ use Zend\ServiceManager\Exception\ServiceNotFoundException;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\InjectApplicationEventInterface;
 use Zend\Mvc\DispatchListener as ZfDispatchListener;
+use Zend\Stdlib\DispatchableInterface as Dispatchable;
 use Closure;
 
 /**
@@ -51,7 +52,7 @@ class DispatchListener extends ZfDispatchListener
             $exception = new ServiceNotFoundException();
         }
 
-        if (!($controller instanceof Closure)) {
+        if (!($controller instanceof Closure) && !($controller instanceof Dispatchable)) {
             $returnType = Application::ERROR_CONTROLLER_INVALID;
             $exception = new InvalidServiceNameException();
         }
