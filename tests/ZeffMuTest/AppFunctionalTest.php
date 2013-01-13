@@ -23,7 +23,9 @@ use PHPUnit_Framework_TestCase;
 use ZeffMu\App;
 
 use Zend\Console\Console;
+use Zend\EventManager\EventInterface;
 use Zend\Http\Request;
+use Zend\Mvc\MvcEvent;
 use Zend\Stdlib\RequestInterface;
 use Zend\Stdlib\ResponseInterface;
 
@@ -39,9 +41,9 @@ class AppFunctionalTest extends PHPUnit_Framework_TestCase
     {
         Console::overrideIsConsole(false);
 
-        $app      = App::init();
-        $test     = $this;
-        $appRequest  = new Request();
+        $app        = App::init();
+        $test       = $this;
+        $appRequest = new Request();
 
         $appRequest->setUri('http://localhost/test/blah');
         $app->getMvcEvent()->setRequest($appRequest);
@@ -59,12 +61,18 @@ class AppFunctionalTest extends PHPUnit_Framework_TestCase
             }
         );
 
-        ob_start();
-        $appResponse = $app->run();
-        $responseString = ob_get_contents();
-        ob_end_clean();
+        // overriding send response listener
+        $app->getEventManager()->attach(
+            MvcEvent::EVENT_FINISH,
+            function (EventInterface $e) {
+                $e->stopPropagation();
+            },
+            1000
+        );
 
-        $this->assertSame('Hello world!', $responseString);
+        $appResponse = $app->run();
+
         $this->assertSame($response, $appResponse);
+        $this->assertSame('Hello world!', $appResponse->getContent());
     }
 }
