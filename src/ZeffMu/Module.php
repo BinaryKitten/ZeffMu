@@ -31,6 +31,9 @@ class Module implements ServiceProviderInterface
     public function getServiceConfig()
     {
         return array(
+//            'invokables' => array(
+//                'DispatchListener'  => 'ZeffMu\DispatchListener',
+//            ),
             'factories' => array(
                 'Application' => function (ServiceLocatorInterface $sl) {
                     return new App($sl->get('Config'), $sl);

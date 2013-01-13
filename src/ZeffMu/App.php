@@ -34,16 +34,20 @@ class App extends ZfApplication
 {
     /**
      * @param string|RouteInterface $route
-     * @param callable $controller
+     * @param Closure|String $controller
      */
     public function route($route, $controller)
     {
+        $sm     = $this->getServiceManager();
+        $cpm    = $sm->get('ControllerLoader');
+
         if ($controller instanceof \Closure) {
-            $controller = new ClosureController($controller);
+            $wrappedController = new ClosureController($controller);
+            $controller = "ZeffMu\\Controllers\\" .  md5($route);
+            $cpm->setService($controller, $wrappedController);
         }
 
-        $this
-            ->getServiceManager()
+        $sm
             ->get('Router')
             ->addRoute(
                 $route,
@@ -57,6 +61,7 @@ class App extends ZfApplication
                     ),
                 )
             );
+
         return $this;
     }
 
