@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -19,14 +20,12 @@
 
 namespace ZeffMu;
 
-use ArrayObject;
 use Zend\ServiceManager\Exception\InvalidServiceNameException;
 use Zend\ServiceManager\Exception\ServiceNotFoundException;
-use Zend\ServiceManager\ServiceManager;
-use Zend\Stdlib\ArrayUtils;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\InjectApplicationEventInterface;
 use Zend\Mvc\DispatchListener as ZfDispatchListener;
+use Closure;
 
 /**
  * Closure dispatch listener - dispatches any requests where a route match includes
@@ -34,39 +33,37 @@ use Zend\Mvc\DispatchListener as ZfDispatchListener;
  */
 class DispatchListener extends ZfDispatchListener
 {
+
     /**
      * {@inheritDoc}
      */
     public function onDispatch(MvcEvent $e)
     {
-        $routeMatch       = $e->getRouteMatch();
-        $controller       = $routeMatch->getParam('controller', null);
-        $application      = $e->getApplication();
-        $events           = $application->getEventManager();
+        $routeMatch = $e->getRouteMatch();
+        $controller = $routeMatch->getParam('controller', null);
+        $application = $e->getApplication();
+        $events = $application->getEventManager();
+        $returnType = null;
+        $exception = null;
 
         if (null === $controller) {
+            $returnType = Application::ERROR_CONTROLLER_NOT_FOUND;
+            $exception = new ServiceNotFoundException();
+        }
+
+        if (!($controller instanceof Closure)) {
+            $returnType = Application::ERROR_CONTROLLER_INVALID;
+            $exception = new InvalidServiceNameException();
+        }
+
+        if ($returnType !== null) {
             $return = $this->marshallControllerNotFoundEvent(
-                Application::ERROR_CONTROLLER_NOT_FOUND,
-                $controller,
-                new ServiceNotFoundException(),
-                $e,
-                $application
+                $returnType, $controller, $exception, $e, $application
             );
             return $this->complete($return, $e);
         }
 
-        if (!is_callable($controller)) {
-            $return = $this->marshallControllerNotFoundEvent(
-                Application::ERROR_CONTROLLER_INVALID,
-                gettype($controller),
-                new InvalidServiceNameException(),
-                $e,
-                $application
-            );
-            return $this->complete($return, $e);
-        }
-
-        $request  = $e->getRequest();
+        $request = $e->getRequest();
         $response = $application->getResponse();
 
         if ($controller instanceof InjectApplicationEventInterface) {
@@ -84,7 +81,7 @@ class DispatchListener extends ZfDispatchListener
             $results = $events->trigger(MvcEvent::EVENT_DISPATCH_ERROR, $e);
             $return = $results->last();
 
-            if (! $return) {
+            if (!$return) {
                 $return = $e->getResult();
             }
         }
@@ -106,4 +103,5 @@ class DispatchListener extends ZfDispatchListener
 
         return parent::complete($return, $event);
     }
+
 }
