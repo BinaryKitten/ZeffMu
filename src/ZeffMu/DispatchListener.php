@@ -75,7 +75,7 @@ class DispatchListener extends ZfDispatchListener
             $return = $controller($routeMatch->getParams(), $request, $response);
         } catch (\Exception $ex) {
             $e
-                ->setError(Application::ERROR_EXCEPTION)
+                ->setError(App::ERROR_EXCEPTION)
                 ->setController($controller)
                 ->setControllerClass(get_class($controller))
                 ->setParam('exception', $ex);
