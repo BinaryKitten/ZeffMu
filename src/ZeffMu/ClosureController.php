@@ -56,8 +56,6 @@ class ClosureController extends AbstractController
     public function onDispatch(MvcEvent $e)
     {
         $routeMatch = $e->getRouteMatch();
-        \Zend\Debug\Debug::dump($routeMatch->getParams());
-        die();
         $application = $e->getApplication();
         $request = $e->getRequest();
         $response = $application->getResponse();
