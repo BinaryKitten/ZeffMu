@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -31,6 +32,7 @@ use Closure;
  */
 class ClosureController extends AbstractController
 {
+
     /**
      * The closure we are wrapping
      * @var Closure $closure
@@ -53,22 +55,31 @@ class ClosureController extends AbstractController
      */
     public function onDispatch(MvcEvent $e)
     {
-        $routeMatch     = $e->getRouteMatch();
-        $application    = $e->getApplication();
-        $request        = $e->getRequest();
-        $response       = $application->getResponse();
+        $routeMatch = $e->getRouteMatch();
+        $application = $e->getApplication();
+        $request = $e->getRequest();
+        $response = $application->getResponse();
 
-        $closure        = $this->closure;
+        $closure = $this->closure;
         if (version_compare(PHP_VERSION, '5.4.0') >= 0) {
             $closure->bindTo($this);
         }
-        $result         = $closure(
-            $routeMatch->getParams(),
-            $request,
-            $response
+        $result = $closure(
+            $routeMatch->getParams(), $request, $response
         );
+
+        if (is_array($result)) {
+            $result = array(
+                'content' => $result
+            );
+            $result = new ViewModel($result);
+        } elseif (!($result instanceof ViewModel)) {
+            $response->setContent($result);
+            return $response;
+        }
 
         $e->setResult($result);
         return $result;
     }
+
 }
