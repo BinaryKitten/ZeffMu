@@ -56,6 +56,8 @@ class ClosureController extends AbstractController
     public function onDispatch(MvcEvent $e)
     {
         $routeMatch = $e->getRouteMatch();
+        \Zend\Debug\Debug::dump($routeMatch->getParams());
+        die();
         $application = $e->getApplication();
         $request = $e->getRequest();
         $response = $application->getResponse();
@@ -69,10 +71,8 @@ class ClosureController extends AbstractController
         );
 
         if (is_array($result)) {
-            $result = array(
-                'content' => $result
-            );
             $result = new ViewModel($result);
+            $result->setTemplate($template);
         } elseif (!($result instanceof ViewModel)) {
             $response->setContent($result);
             return $response;

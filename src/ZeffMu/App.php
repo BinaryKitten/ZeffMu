@@ -21,6 +21,7 @@ namespace ZeffMu;
 
 use Zend\Mvc\Application as ZfApplication;
 use Zend\Mvc\Router\Http\Part as PartRoute;
+use Zend\Stdlib\ArrayUtils;
 use Zend\Mvc\Router\RouteInterface;
 
 /**
@@ -71,13 +72,14 @@ class App extends ZfApplication
      */
     public static function init($configuration = null)
     {
-        if (null === $configuration) {
-            $configuration = array(
-                'module_listener_options' => array(),
-                'modules' => array(),
-                'service_manager' => array(),
-            );
-        }
+        
+        $defaults = array(
+            'module_listener_options' => array(),
+            'modules' => array(),
+            'service_manager' => array(),
+        );
+        
+        $configuration = ArrayUtils::merge($defaults, $configuration);
 
         if (!isset($configuration['modules'])) {
             $configuration['modules'] = array();
