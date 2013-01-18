@@ -49,7 +49,7 @@ class ClosureController extends AbstractController
     }
 
     /**
-     * 
+     *
      * @param \Zend\Mvc\MvcEvent $e
      * @return misc
      */

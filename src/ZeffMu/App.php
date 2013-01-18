@@ -72,13 +72,13 @@ class App extends ZfApplication
      */
     public static function init($configuration = array())
     {
-        
+
         $defaults = array(
             'module_listener_options' => array(),
             'modules' => array(),
             'service_manager' => array(),
         );
-        
+
         $configuration = ArrayUtils::merge($defaults, $configuration);
 
         if (!isset($configuration['modules'])) {
