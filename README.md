@@ -84,3 +84,7 @@ $app
 
  * TBD: services
  * TBD: events
+
+## Build status
+
+ [![Build Status](https://travis-ci.org/BinaryKitten/ZeffMu.png?branch=master)](undefined)
