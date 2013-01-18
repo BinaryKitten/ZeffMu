@@ -70,7 +70,7 @@ class App extends ZfApplication
      * {@inheritDoc}
      * @return self
      */
-    public static function init($configuration = null)
+    public static function init($configuration = array())
     {
         
         $defaults = array(
