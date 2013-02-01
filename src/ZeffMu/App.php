@@ -21,6 +21,7 @@ namespace ZeffMu;
 
 use Zend\Mvc\Application as ZfApplication;
 use Zend\Mvc\Router\Http\Part as PartRoute;
+use Zend\Stdlib\ArrayUtils;
 use Zend\Mvc\Router\RouteInterface;
 
 /**
@@ -34,12 +35,20 @@ class App extends ZfApplication
 {
     /**
      * @param string|RouteInterface $route
-     * @param callable $controller
+     * @param Closure|String $controller
      */
     public function route($route, $controller)
     {
-        $this
-            ->getServiceManager()
+        $sm     = $this->getServiceManager();
+        $cpm    = $sm->get('ControllerLoader');
+
+        if ($controller instanceof \Closure) {
+            $wrappedController = new ClosureController($controller);
+            $controller = "ZeffMu\\Controllers\\" .  md5($route);
+            $cpm->setService($controller, $wrappedController);
+        }
+
+        $sm
             ->get('Router')
             ->addRoute(
                 $route,
@@ -53,6 +62,7 @@ class App extends ZfApplication
                     ),
                 )
             );
+
         return $this;
     }
 
@@ -60,15 +70,16 @@ class App extends ZfApplication
      * {@inheritDoc}
      * @return self
      */
-    public static function init($configuration = null)
+    public static function init($configuration = array())
     {
-        if (null === $configuration) {
-            $configuration = array(
-                'module_listener_options' => array(),
-                'modules' => array(),
-                'service_manager' => array(),
-            );
-        }
+
+        $defaults = array(
+            'module_listener_options' => array(),
+            'modules' => array(),
+            'service_manager' => array(),
+        );
+
+        $configuration = ArrayUtils::merge($defaults, $configuration);
 
         if (!isset($configuration['modules'])) {
             $configuration['modules'] = array();

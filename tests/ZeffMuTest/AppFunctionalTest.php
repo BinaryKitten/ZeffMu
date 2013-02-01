@@ -75,4 +75,38 @@ class AppFunctionalTest extends PHPUnit_Framework_TestCase
         $this->assertSame($response, $appResponse);
         $this->assertSame('Hello world!', $appResponse->getContent());
     }
+
+    /**
+     * @requires PHP 5.4
+     */
+    public function testClosureThisIsControllerInstance()
+    {
+        Console::overrideIsConsole(false);
+
+        $app        = App::init();
+        $test       = $this;
+        $appRequest = new Request();
+
+        $appRequest->setUri('http://localhost/test/blah');
+        $app->getMvcEvent()->setRequest($appRequest);
+
+        $app->route(
+            '/test/:param1',
+            function () use ($test) {
+                $test->assertInstanceOf('ZeffMu\ClosureController', $this);
+                return 'test';
+            }
+        );
+
+        // overriding send response listener
+        $app->getEventManager()->attach(
+            MvcEvent::EVENT_FINISH,
+            function (EventInterface $e) {
+                $e->stopPropagation();
+            },
+            1000
+        );
+
+        $app->run();
+    }
 }
