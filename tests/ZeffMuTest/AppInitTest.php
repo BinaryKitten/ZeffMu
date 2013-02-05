@@ -93,7 +93,7 @@ class AppFunctionalTest extends PHPUnit_Framework_TestCase
         $app->route(
             '/test/:param1',
             function () use ($test) {
-//                $test->assertInstanceOf('ZeffMu\ClosureController', $this);
+                $test->assertInstanceOf('ZeffMu\ClosureController', $this);
                 return 'test';
             }
         );
