@@ -93,7 +93,7 @@ class AppFunctionalTest extends PHPUnit_Framework_TestCase
         $app->route(
             '/test/:param1',
             function () use ($test) {
-                 echo 'version check: '.version_compare(PHP_VERSION, '5.4.0', '<='). "\n";
+                 echo 'version check: '.version_compare(PHP_VERSION, '5.4.0'). "\n";
 //                $test->assertInstanceOf('ZeffMu\ClosureController', $this);
                 return 'test';
             }
