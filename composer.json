@@ -31,7 +31,8 @@
     ],
     "require": {
         "php": ">=5.3",
-        "zendframework/zend-mvc": "2.*"
+        "zendframework/zend-mvc": "2.*",
+	"zendframework/zend-form": "2.*"
     },
     "autoload": {
         "psr-0": {
