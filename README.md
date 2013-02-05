@@ -18,8 +18,14 @@ architectures involving services and more advanced components, such as
 ZF2's [ModuleManager](http://framework.zend.com/manual/2.0/en/modules/zend.module-manager.intro.html) 
 or [Doctrine2 ORM](http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/index.html).
 
-Please note that this is a project just developed for fun and to see
-how similar/different the architectures of Silex and ZF2 are.
+## Important Notes
+
+Please note that this is a project started for fun and to see how similar/different the architectures of Silex and ZF2 are.
+
+We are working on new features and fixes for various things
+
+We are looking to have preliminary stableness for each Milestone, starting with Milestone v0.0.5 . 
+Until this 1st milestone has been reached master is to be considered unstable and volatile.
 
 ## Installation:
 
