@@ -38,8 +38,9 @@ use Zend\Stdlib\ResponseInterface;
  */
 class AppInitTest extends PHPUnit_Framework_TestCase
 {
-    public function testTrue()
+    public function testAppReturnedByInit()
     {
-        $this->assertTrue(true);
+        $app = App::init();
+        $this->assertInstanceOf('ZeffMu\App', $app);
     }
 }
