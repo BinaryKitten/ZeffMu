@@ -23,6 +23,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Zend\Mvc\Router\Http\TreeRouteStack as HttpRouter;
+use Zend\Mvc\MvcEvent;
 
 class Module implements ServiceProviderInterface, ConfigProviderInterface
 {
@@ -55,5 +56,24 @@ class Module implements ServiceProviderInterface, ConfigProviderInterface
                 ),
             )
         );
+    }
+
+     /**
+     * Prepares the view layer
+     *
+     * @param  $event
+     * @return void
+     */
+    public function onBootstrap($event)
+    {
+        \Zend\Debug\Debug::dump('booty');
+        $application  = $event->getApplication();
+        $services     = $application->getServiceManager();
+        $config       = $services->get('Config');
+        $events       = $application->getEventManager();
+        $sharedEvents = $events->getSharedManager();
+
+        $injectTemplateListener = new InjectTemplateListener();
+        $sharedEvents->attach('Zend\Stdlib\DispatchableInterface', MvcEvent::EVENT_DISPATCH, array($injectTemplateListener, 'injectTemplate'), -91);
     }
 }
