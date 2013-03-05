@@ -66,7 +66,6 @@ class Module implements ServiceProviderInterface, ConfigProviderInterface
      */
     public function onBootstrap($event)
     {
-        \Zend\Debug\Debug::dump('booty');
         $application  = $event->getApplication();
         $services     = $application->getServiceManager();
         $config       = $services->get('Config');
