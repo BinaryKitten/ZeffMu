@@ -74,6 +74,13 @@ class ClosureController extends AbstractController
         } elseif (!($result instanceof ViewModel)) {
             $response->setContent($result);
             return $response;
+        } elseif ($result instanceof ViewModel) {
+            $template = $result->getTemplate();
+            \Zend\Debug\Debug::dump($template);
+            if (empty($template)) {
+                
+                echo "template empty\n";
+            }
         }
 
         $e->setResult($result);

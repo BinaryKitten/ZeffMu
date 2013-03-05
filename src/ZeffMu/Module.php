@@ -21,9 +21,10 @@ namespace ZeffMu;
 
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
+use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Zend\Mvc\Router\Http\TreeRouteStack as HttpRouter;
 
-class Module implements ServiceProviderInterface
+class Module implements ServiceProviderInterface, ConfigProviderInterface
 {
     /**
      * {@inheritDoc}
@@ -42,6 +43,17 @@ class Module implements ServiceProviderInterface
                     return $sl->get('Router');
                 }
             ),
+        );
+    }
+
+    public function getConfig()
+    {
+        return array(
+            'view_manager' => array(
+                'template_path_stack' => array(
+                    realpath(getcwd() . '/view'),
+                ),
+            )
         );
     }
 }
