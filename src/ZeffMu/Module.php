@@ -57,22 +57,4 @@ class Module implements ServiceProviderInterface, ConfigProviderInterface
             )
         );
     }
-
-     /**
-     * Prepares the view layer
-     *
-     * @param  $event
-     * @return void
-     */
-    public function onBootstrap($event)
-    {
-        $application  = $event->getApplication();
-        $services     = $application->getServiceManager();
-        $config       = $services->get('Config');
-        $events       = $application->getEventManager();
-        $sharedEvents = $events->getSharedManager();
-
-        $injectTemplateListener = new InjectTemplateListener();
-        $sharedEvents->attach('Zend\Stdlib\DispatchableInterface', MvcEvent::EVENT_DISPATCH, array($injectTemplateListener, 'injectTemplate'), -91);
-    }
 }

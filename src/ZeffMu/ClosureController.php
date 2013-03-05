@@ -79,16 +79,15 @@ class ClosureController extends AbstractController
             $response->setContent($result);
             return $response;
         } elseif($result instanceof ViewModel) {
-            
+            $template = $result->getTemplate();
+            if (empty($template)) {
+                if ($this->controllerName !== null) {
+                    $result->setTemplate($this->controllerName);
+                }
+            }
         }
 
         $e->setResult($result);
         return $result;
     }
-
-    public function getControllerName()
-    {
-        return $this->controllerName;
-    }
-
 }
