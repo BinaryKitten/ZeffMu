@@ -22,10 +22,10 @@ class InjectTemplateListener extends ZendViewInjectTemplateListener
         }
 
         $template = $model->getTemplate();
-        if (!empty($template) && $template != 'zeff-mu/closure') {
-            return;
+        if (empty($template) || $template == 'zeff-mu/closure') {
+            $controller = $e->getTarget();
+            $model->setTemplate($controller->getControllerName());
         }
-        $template = 'frank';
-        $model->setTemplate('frank');
+        
     }
 }

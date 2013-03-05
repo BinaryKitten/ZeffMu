@@ -39,13 +39,17 @@ class ClosureController extends AbstractController
      */
     protected $closure = null;
 
+    protected $controllerName = null;
+
     /**
      * Constructor
      * @param Closure $closure
+     * @param string $controllerName
      */
-    public function __construct(Closure $closure)
+    public function __construct(Closure $closure, $controllerName = null)
     {
         $this->closure = $closure;
+        $this->controllerName = $controllerName;
     }
 
     /**
@@ -74,10 +78,17 @@ class ClosureController extends AbstractController
         } elseif (!($result instanceof ViewModel)) {
             $response->setContent($result);
             return $response;
+        } elseif($result instanceof ViewModel) {
+            
         }
 
         $e->setResult($result);
         return $result;
+    }
+
+    public function getControllerName()
+    {
+        return $this->controllerName;
     }
 
 }
