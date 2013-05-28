@@ -81,10 +81,6 @@ class App extends ZfApplication
 
         $configuration = ArrayUtils::merge($defaults, $configuration);
 
-        if (!isset($configuration['modules'])) {
-            $configuration['modules'] = array();
-        }
-
         $configuration['modules'][] = 'ZeffMu';
 
         return parent::init($configuration);
