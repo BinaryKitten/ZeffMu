@@ -61,9 +61,8 @@ class ClosureController extends AbstractController
         $response = $application->getResponse();
 
         $closure = $this->closure;
-        if (version_compare(PHP_VERSION, '5.4') >= 0) {
-            $closure = $closure->bindTo($this);
-        }
+        $closure = $closure->bindTo($this);
+        
         $result = $closure(
             $routeMatch->getParams(), $request, $response
         );
