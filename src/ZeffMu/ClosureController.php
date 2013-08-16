@@ -62,7 +62,7 @@ class ClosureController extends AbstractController
 
         $closure = $this->closure;
         $closure = $closure->bindTo($this);
-        
+
         $result = $closure(
             $routeMatch->getParams(), $request, $response
         );
