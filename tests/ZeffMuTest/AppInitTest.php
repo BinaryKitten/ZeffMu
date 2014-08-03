@@ -22,13 +22,6 @@ namespace ZeffMuTest;
 use PHPUnit_Framework_TestCase;
 use ZeffMu\App;
 
-use Zend\Console\Console;
-use Zend\EventManager\EventInterface;
-use Zend\Http\Request;
-use Zend\Mvc\MvcEvent;
-use Zend\Stdlib\RequestInterface;
-use Zend\Stdlib\ResponseInterface;
-
 /**
  * Application initailize tests to cover the start up and routing
  *
