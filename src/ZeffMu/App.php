@@ -20,7 +20,6 @@
 namespace ZeffMu;
 
 use Zend\Mvc\Application as ZfApplication;
-use Zend\Mvc\Router\Http\Part as PartRoute;
 use Zend\Stdlib\ArrayUtils;
 use Zend\Mvc\Router\RouteInterface;
 
@@ -35,7 +34,7 @@ class App extends ZfApplication
 {
     /**
      * @param string|RouteInterface $route
-     * @param Closure|String $controller
+     * @param Closure|String        $controller
      */
     public function route($route, $controller)
     {

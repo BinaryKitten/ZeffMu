@@ -50,8 +50,7 @@ class AppFunctionalTest extends PHPUnit_Framework_TestCase
 
         $app->route(
             '/test/:param1',
-            function (array $params, RequestInterface $req, ResponseInterface $res)
-            use ($test, $appRequest, &$response) {
+            function (array $params, RequestInterface $req, ResponseInterface $res) use ($test, $appRequest, &$response) {
                 $test->assertArrayHasKey('param1', $params);
                 $test->assertSame($appRequest, $req);
 
@@ -94,6 +93,7 @@ class AppFunctionalTest extends PHPUnit_Framework_TestCase
             '/test/:param1',
             function () use ($test) {
                 $test->assertInstanceOf('ZeffMu\ClosureController', $this);
+
                 return 'test';
             }
         );

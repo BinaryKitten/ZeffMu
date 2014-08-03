@@ -50,7 +50,7 @@ class ClosureController extends AbstractController
 
     /**
      *
-     * @param \Zend\Mvc\MvcEvent $e
+     * @param  \Zend\Mvc\MvcEvent $e
      * @return misc
      */
     public function onDispatch(MvcEvent $e)
@@ -75,10 +75,12 @@ class ClosureController extends AbstractController
             $result->setTemplate($template);
         } elseif (!($result instanceof ViewModel)) {
             $response->setContent($result);
+
             return $response;
         }
 
         $e->setResult($result);
+
         return $result;
     }
 
