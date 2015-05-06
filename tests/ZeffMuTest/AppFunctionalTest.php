@@ -21,7 +21,6 @@ namespace ZeffMuTest;
 
 use PHPUnit_Framework_TestCase;
 use ZeffMu\App;
-
 use Zend\Console\Console;
 use Zend\EventManager\EventInterface;
 use Zend\Http\Request;
@@ -41,9 +40,10 @@ class AppFunctionalTest extends PHPUnit_Framework_TestCase
     {
         Console::overrideIsConsole(false);
 
-        $app        = App::init();
-        $test       = $this;
+        $app = App::init();
+        $test = $this;
         $appRequest = new Request();
+        $response = null;
 
         $appRequest->setUri('http://localhost/test/blah');
         $app->getMvcEvent()->setRequest($appRequest);
@@ -83,8 +83,8 @@ class AppFunctionalTest extends PHPUnit_Framework_TestCase
     {
         Console::overrideIsConsole(false);
 
-        $app        = App::init();
-        $test       = $this;
+        $app = App::init();
+        $test = $this;
         $appRequest = new Request();
 
         $appRequest->setUri('http://localhost/test/blah');
