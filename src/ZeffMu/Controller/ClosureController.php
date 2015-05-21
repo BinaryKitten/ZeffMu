@@ -18,7 +18,7 @@
  * <https://github.com/BinaryKitten/ZeffMu>.
  */
 
-namespace ZeffMu;
+namespace ZeffMu\Controller;
 
 use Zend\Mvc\Controller\AbstractController;
 use Zend\Mvc\MvcEvent;

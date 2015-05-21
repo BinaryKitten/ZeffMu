@@ -19,6 +19,8 @@
 
 namespace ZeffMu;
 
+use ZeffMu\Controller\ClosureController;
+
 use Zend\Mvc\Application as ZfApplication;
 use Zend\Mvc\Router\Http\Part as PartRoute;
 use Zend\Stdlib\ArrayUtils;
@@ -36,15 +38,21 @@ class App extends ZfApplication
     /**
      * @param string|RouteInterface $route
      * @param Closure|String $controller
+     * @return $this
      */
-    public function route($route, $controller)
+    public function route($route, $verb, $controller = null)
     {
+        if (is_callable($verb) && $controller === null) {
+            $controller = $verb;
+            $verb = null;
+        }
+
         $sm     = $this->getServiceManager();
         $cpm    = $sm->get('ControllerLoader');
 
         if ($controller instanceof \Closure) {
             $wrappedController = new ClosureController($controller);
-            $controller = "ZeffMu\\Controllers\\" .  md5($route);
+            $controller = "ZeffMu\\LiveController\\" .  md5($route);
             $cpm->setService($controller, $wrappedController);
         }
 
@@ -86,6 +94,12 @@ class App extends ZfApplication
         return parent::init($configuration);
     }
 
+    /**
+     * Proxy method for Generic Service Manager
+     *
+     * @param string $service
+     * @return mixed
+     */
     public function getService($service)
     {
         return $this->getServiceManager()->get($service);
