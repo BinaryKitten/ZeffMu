@@ -43,7 +43,7 @@ class AppFunctionalTest extends PHPUnit_Framework_TestCase
         $app = App::init();
         $test = $this;
         $appRequest = new Request();
-        $response = null;
+        $outerTestResponse = null;
 
         $appRequest->setUri('http://localhost/test/blah');
         $app->getMvcEvent()->setRequest($appRequest);
@@ -51,11 +51,11 @@ class AppFunctionalTest extends PHPUnit_Framework_TestCase
         $app->route(
             '/test/:param1',
             function (array $params, RequestInterface $req, ResponseInterface $res)
-            use ($test, $appRequest, &$response) {
+            use ($test, $appRequest, &$outerTestResponse) {
                 $test->assertArrayHasKey('param1', $params);
                 $test->assertSame($appRequest, $req);
 
-                $response = $res;
+                $outerTestResponse = $res;
 
                 return 'Hello world!';
             }
@@ -70,10 +70,10 @@ class AppFunctionalTest extends PHPUnit_Framework_TestCase
             1000
         );
 
-        $appResponse = $app->run();
-
-        $this->assertSame($response, $appResponse);
-        $this->assertSame('Hello world!', $appResponse->getContent());
+        $appRunReturn = $app->run();
+        $this->assertSame($app, $appRunReturn);
+        $this->assertSame($app->getResponse(), $outerTestResponse);
+        $this->assertSame('Hello world!', $app->getResponse()->getContent());
     }
 
     /**
