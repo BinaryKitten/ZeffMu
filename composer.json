@@ -30,7 +30,7 @@
         }
     ],
     "require": {
-        "php": ">=5.3",
+        "php": ">=5.3.23",
         "zendframework/zend-mvc": "2.*",
         "zendframework/zend-form": "2.*",
         "zendframework/zend-modulemanager": "2.*",
