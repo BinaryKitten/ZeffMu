@@ -20,10 +20,10 @@
 
 namespace ZeffMu\Controller;
 
+use Closure;
 use Zend\Mvc\Controller\AbstractController;
 use Zend\Mvc\MvcEvent;
 use Zend\View\Model\ViewModel;
-use Closure;
 
 /**
  * Description of ClosureController
@@ -62,7 +62,7 @@ class ClosureController extends AbstractController
 
         $closure = $this->closure;
         // if php > 5.4
-        if (PHP_VERSION_ID > 50400) {
+        if (PHP_VERSION_ID >= 50400) {
             $closure = $closure->bindTo($this);
         }
 
