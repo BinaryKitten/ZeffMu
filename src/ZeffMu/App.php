@@ -40,12 +40,18 @@ class App extends ZfApplication
     public function route($route, $controller)
     {
         $sm     = $this->getServiceManager();
+        /* @var $cpm \Zend\Mvc\Controller\ControllerManager */
         $cpm    = $sm->get('ControllerLoader');
 
         if ($controller instanceof \Closure) {
             $wrappedController = new ClosureController($controller);
             $controller = "ZeffMu\\Controllers\\" .  md5($route);
-            $cpm->setService($controller, $wrappedController);
+            $cpm->setFactory(
+                $controller,
+                function () use ($wrappedController) {
+                    return $wrappedController;
+                }
+            );
         }
 
         $sm
