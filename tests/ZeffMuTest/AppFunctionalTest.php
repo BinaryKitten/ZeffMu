@@ -119,7 +119,7 @@ class AppFunctionalTest extends PHPUnit_Framework_TestCase
     {
         $helper = $this->getMock(
             'Zend\Mvc\Controller\Plugin\PluginInterface',
-            ['setController', 'getController', '__invoke']
+            array('setController', 'getController', '__invoke')
         );
 
         $request = new Request();
