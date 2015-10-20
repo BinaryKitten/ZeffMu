@@ -19,9 +19,10 @@
 
 namespace ZeffMu;
 
-use Zend\ServiceManager\ServiceLocatorInterface;
+use ZeffMu\App;
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
 use Zend\Mvc\Router\Http\TreeRouteStack as HttpRouter;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 class Module implements ServiceProviderInterface
 {
@@ -35,10 +36,10 @@ class Module implements ServiceProviderInterface
                 'Application' => function (ServiceLocatorInterface $sl) {
                     return new App($sl->get('Config'), $sl);
                 },
-                'Router' => function () {
+                'Router'      => function () {
                     return HttpRouter::factory(array());
                 },
-                'HttpRouter' => function (ServiceLocatorInterface $sl) {
+                'HttpRouter'  => function (ServiceLocatorInterface $sl) {
                     return $sl->get('Router');
                 }
             ),

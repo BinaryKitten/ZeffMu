@@ -23,6 +23,7 @@ use Zend\Mvc\Application as ZfApplication;
 use Zend\Mvc\Router\Http\Part as PartRoute;
 use Zend\Stdlib\ArrayUtils;
 use Zend\Mvc\Router\RouteInterface;
+use ZeffMu\ClosureController;
 
 /**
  * Zend Framework 2 based micro-framework application
@@ -36,6 +37,8 @@ class App extends ZfApplication
     /**
      * @param string|RouteInterface $route
      * @param Closure|String $controller
+     *
+     * @return $this
      */
     public function route($route, $controller)
     {
@@ -92,11 +95,19 @@ class App extends ZfApplication
         return parent::init($configuration);
     }
 
+    /**
+     * @param $service
+     *
+     * @return array|object
+     */
     public function getService($service)
     {
         return $this->getServiceManager()->get($service);
     }
 
+    /**
+     * Launch the app
+     */
     public function __invoke()
     {
         $this->run();
