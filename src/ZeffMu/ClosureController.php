@@ -20,10 +20,10 @@
 
 namespace ZeffMu;
 
+use Closure;
 use Zend\Mvc\Controller\AbstractController;
 use Zend\Mvc\MvcEvent;
 use Zend\View\Model\ViewModel;
-use Closure;
 
 /**
  * Description of ClosureController
@@ -41,6 +41,7 @@ class ClosureController extends AbstractController
 
     /**
      * Constructor
+     *
      * @param Closure $closure
      */
     public function __construct(Closure $closure)
@@ -51,14 +52,15 @@ class ClosureController extends AbstractController
     /**
      *
      * @param \Zend\Mvc\MvcEvent $e
+     *
      * @return misc
      */
     public function onDispatch(MvcEvent $e)
     {
-        $routeMatch = $e->getRouteMatch();
+        $routeMatch  = $e->getRouteMatch();
         $application = $e->getApplication();
-        $request = $e->getRequest();
-        $response = $application->getResponse();
+        $request     = $e->getRequest();
+        $response    = $application->getResponse();
 
         $closure = $this->closure->bindTo($this);
 
@@ -69,12 +71,14 @@ class ClosureController extends AbstractController
         if (is_array($result)) {
             $result = new ViewModel($result);
             $result->setTemplate($template);
-        } elseif (!($result instanceof ViewModel)) {
+        } elseif ( ! ( $result instanceof ViewModel )) {
             $response->setContent($result);
+
             return $response;
         }
 
         $e->setResult($result);
+
         return $result;
     }
 
