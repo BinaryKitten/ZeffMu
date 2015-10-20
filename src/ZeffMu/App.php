@@ -19,11 +19,10 @@
 
 namespace ZeffMu;
 
-use Zend\Mvc\Application as ZfApplication;
-use Zend\Mvc\Router\Http\Part as PartRoute;
-use Zend\Stdlib\ArrayUtils;
-use Zend\Mvc\Router\RouteInterface;
 use ZeffMu\ClosureController;
+use Zend\Mvc\Application as ZfApplication;
+use Zend\Mvc\Router\RouteInterface;
+use Zend\Stdlib\ArrayUtils;
 
 /**
  * Zend Framework 2 based micro-framework application
@@ -42,13 +41,13 @@ class App extends ZfApplication
      */
     public function route($route, $controller)
     {
-        $sm     = $this->getServiceManager();
+        $sm = $this->getServiceManager();
         /* @var $cpm \Zend\Mvc\Controller\ControllerManager */
-        $cpm    = $sm->get('ControllerLoader');
+        $cpm = $sm->get('ControllerLoader');
 
         if ($controller instanceof \Closure) {
             $wrappedController = new ClosureController($controller);
-            $controller = "ZeffMu\\Controllers\\" .  md5($route);
+            $controller        = "ZeffMu\\Controllers\\" . md5($route);
             $cpm->setFactory(
                 $controller,
                 function () use ($wrappedController) {
@@ -62,9 +61,9 @@ class App extends ZfApplication
             ->addRoute(
                 $route,
                 array(
-                    'type' => 'Zend\Mvc\Router\Http\Segment',
+                    'type'    => 'Zend\Mvc\Router\Http\Segment',
                     'options' => array(
-                        'route' => $route,
+                        'route'    => $route,
                         'defaults' => array(
                             'controller' => $controller,
                         ),
@@ -84,8 +83,8 @@ class App extends ZfApplication
 
         $defaults = array(
             'module_listener_options' => array(),
-            'modules' => array(),
-            'service_manager' => array(),
+            'modules'                 => array(),
+            'service_manager'         => array(),
         );
 
         $configuration = ArrayUtils::merge($defaults, $configuration);
