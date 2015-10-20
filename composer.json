@@ -1,54 +1,47 @@
 {
-    "name": "binarykitten/zeffmu",
-    "description": "Zend Framework 2 based Micro Framework",
-    "type": "library",
-    "license": "MIT",
-    "keywords": [
-        "framework",
-        "micro",
-        "zf2"
-    ],
-    "homepage": "https://github.com/binarykitten/ZeffMu",
-    "authors": [
-        {
-            "name": "Marco Pivetta",
-            "email": "ocramius@gmail.com",
-            "homepage": "http://marco-pivetta.com/",
-            "role": "Developer"
-        },
-         {
-            "name": "Kathryn Reeve",
-            "email": "kathryn@binarykitten.com",
-            "homepage": "http://binarykitten.com/",
-            "role": "Developer"
-        }
-    ],
-    "repositories": [
-        {
-            "type": "composer",
-            "url": "https://packages.zendframework.com/"
-        }
-    ],
-    "require": {
-        "php": ">=5.5",
-        "zendframework/zend-mvc": "2.*",
-        "zendframework/zend-form": "2.*",
-        "zendframework/zend-modulemanager": "2.*",
-        "zendframework/zend-loader": "2.*",
-        "zendframework/zend-view": "2.*",
-        "zendframework/zend-serializer": "2.*",
-        "zendframework/zend-log": "2.*",
-        "zendframework/zend-i18n": "2.*",
-        "zendframework/zend-console": "2.*",
-        "zendframework/zend-http": "2.*"
+  "name": "binarykitten/zeffmu",
+  "description": "Zend Framework 2 based Micro Framework",
+  "type": "library",
+  "license": "MIT",
+  "keywords": [
+    "framework",
+    "micro",
+    "zf2"
+  ],
+  "homepage": "https://github.com/binarykitten/ZeffMu",
+  "authors": [
+    {
+      "name": "Marco Pivetta",
+      "email": "ocramius@gmail.com",
+      "homepage": "http://marco-pivetta.com/",
+      "role": "Developer"
     },
-    "require-dev": {
-        "phpunit/phpunit": "~4.0|~5.0"
-    },
-    "autoload": {
-        "psr-0": {
-            "ZeffMu": "src/"
-        }
+    {
+      "name": "Kathryn Reeve",
+      "email": "kathryn@binarykitten.com",
+      "homepage": "http://binarykitten.com/",
+      "role": "Developer"
     }
+  ],
+  "require": {
+    "php": ">=5.5",
+    "zendframework/zend-mvc": "~2.6.0",
+    "zendframework/zend-modulemanager": "~2.6.1",
+    "zendframework/zend-loader": "~2.5.0",
+    "zendframework/zend-view": "~2.5.0",
+    "zendframework/zend-serializer": "~2.5.0",
+    "zendframework/zend-log": "~2.5.0",
+    "zendframework/zend-i18n": "~2.5.0",
+    "zendframework/zend-console": "~2.5.0",
+    "zendframework/zend-http": "~2.5.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~4.0|~5.0"
+  },
+  "autoload": {
+    "psr-0": {
+      "ZeffMu": "src/"
+    }
+  }
 }
 
