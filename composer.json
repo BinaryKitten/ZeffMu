@@ -30,7 +30,7 @@
     "zendframework/zend-loader": "~2.5.0",
     "zendframework/zend-view": "~2.5.0",
     "zendframework/zend-serializer": "~2.5.0",
-    "zendframework/zend-log": "~2.5.0",,
+    "zendframework/zend-log": "~2.5.0",
     "zendframework/zend-i18n": "~2.5.0",
     "zendframework/zend-console": "~2.5.0",
     "zendframework/zend-http": "~2.5.0"
