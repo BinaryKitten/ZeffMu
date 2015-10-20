@@ -109,4 +109,44 @@ class AppFunctionalTest extends PHPUnit_Framework_TestCase
 
         $app->run();
     }
+
+    /**
+     * @group #24
+     *
+     * @requires PHP 5.4
+     */
+    public function testControllerPluginsAreCorrectlyInjectedInFactories()
+    {
+        $helper = $this->getMock(
+            'Zend\Mvc\Controller\Plugin\PluginInterface',
+            array('setController', 'getController', '__invoke')
+        );
+
+        $request = new Request();
+        $app     = App::init();
+        /* @var $plugins \Zend\ServiceManager\AbstractPluginManager */
+        $plugins = $app->getServiceManager()->get('ControllerPluginManager');
+
+        $request->setUri('http://localhost/something');
+        $app->getMvcEvent()->setRequest($request);
+
+        $plugins->setService('foo', $helper);
+
+        $app->route('/something', function () {
+            $this->foo('bar');
+        });
+
+        $helper->expects(self::once())->method('__invoke')->with('bar');
+
+        // overriding send response listener
+        $app->getEventManager()->attach(
+            MvcEvent::EVENT_FINISH,
+            function (EventInterface $e) {
+                $e->stopPropagation();
+            },
+            1000
+        );
+
+        $app->run();
+    }
 }
